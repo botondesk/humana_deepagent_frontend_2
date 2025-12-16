@@ -16,7 +16,13 @@ import {
   Clock,
   Circle,
   FileIcon,
+  ListPlus,
+  Copy,
+  MessageSquarePlus,
 } from "lucide-react";
+import { StructuredInputForm } from "@/app/components/StructuredInputForm";
+import { CloneThreadForm } from "@/app/components/CloneThreadForm";
+import { FollowUpForm } from "@/app/components/FollowUpForm";
 import { ChatMessage } from "@/app/components/ChatMessage";
 import type {
   TodoItem,
@@ -65,6 +71,9 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(({ assistant }) => {
   const [metaOpen, setMetaOpen] = useState<"tasks" | "files" | null>(null);
   const tasksContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [showStructuredInput, setShowStructuredInput] = useState(false);
+  const [showCloneThread, setShowCloneThread] = useState(false);
+  const [showFollowUpForm, setShowFollowUpForm] = useState(false);
 
   const [input, setInput] = useState("");
   const { scrollRef, contentRef } = useStickToBottom();
@@ -500,6 +509,42 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(({ assistant }) => {
               )}
             </div>
           )}
+          {showStructuredInput && (
+            <div className="px-4 pt-4">
+              <StructuredInputForm
+                onGenerate={(text) => {
+                  setInput(text);
+                  setShowStructuredInput(false);
+                  textareaRef.current?.focus();
+                }}
+                onClose={() => setShowStructuredInput(false)}
+              />
+            </div>
+          )}
+          {showCloneThread && (
+            <div className="px-4 pt-4">
+              <CloneThreadForm
+                onGenerate={(text) => {
+                  setInput(text);
+                  setShowCloneThread(false);
+                  textareaRef.current?.focus();
+                }}
+                onClose={() => setShowCloneThread(false)}
+              />
+            </div>
+          )}
+          {showFollowUpForm && (
+            <div className="px-4 pt-4">
+              <FollowUpForm
+                onGenerate={(text) => {
+                  setInput(text);
+                  setShowFollowUpForm(false);
+                  textareaRef.current?.focus();
+                }}
+                onClose={() => setShowFollowUpForm(false)}
+              />
+            </div>
+          )}
           <form
             onSubmit={handleSubmit}
             className="flex flex-col"
@@ -510,10 +555,55 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(({ assistant }) => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={isLoading ? "Running..." : "Write your message..."}
-              className="font-inherit field-sizing-content flex-1 resize-none border-0 bg-transparent px-[18px] pb-[13px] pt-[14px] text-sm leading-7 text-primary outline-none placeholder:text-tertiary"
+              className="font-inherit flex-1 resize-y border-0 bg-transparent px-[18px] pb-[13px] pt-[14px] text-sm leading-7 text-primary outline-none placeholder:text-tertiary"
               rows={1}
             />
             <div className="flex justify-between gap-2 p-3">
+              <div className="flex items-center gap-2">
+                {controls}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setShowStructuredInput(!showStructuredInput);
+                    setShowCloneThread(false);
+                    setShowFollowUpForm(false);
+                  }}
+                  title="Initial Input"
+                  className={cn(showStructuredInput && "bg-accent text-accent-foreground")}
+                >
+                  <ListPlus size={18} />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setShowFollowUpForm(!showFollowUpForm);
+                    setShowStructuredInput(false);
+                    setShowCloneThread(false);
+                  }}
+                  title="Follow Up Question"
+                  className={cn(showFollowUpForm && "bg-accent text-accent-foreground")}
+                >
+                  <MessageSquarePlus size={18} />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setShowCloneThread(!showCloneThread);
+                    setShowStructuredInput(false);
+                    setShowFollowUpForm(false);
+                  }}
+                  title="Clone Thread"
+                  className={cn(showCloneThread && "bg-accent text-accent-foreground")}
+                >
+                  <Copy size={18} />
+                </Button>
+              </div>
               <div className="flex justify-end gap-2">
                 <Button
                   type={isLoading ? "button" : "submit"}

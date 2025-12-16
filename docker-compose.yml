@@ -1,0 +1,15 @@
+services:
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm update next && npm install && npm run build && npm start"
+    ports:
+      - "10824:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
