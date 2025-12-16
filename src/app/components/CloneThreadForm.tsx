@@ -23,7 +23,7 @@ export const CloneThreadForm: React.FC<CloneThreadFormProps> = ({
     const handleGenerate = () => {
         if (!threadId.trim()) return;
 
-        const generatedText = `get the file state from this thread_id: ${threadId.trim()} and write the question.md and final_report.md to the current file system`;
+        const generatedText = `get the file state from this thread_id: ${threadId.trim()} and write the question.md and final_report.md to the current file system using write_file tool`;
         onGenerate(generatedText);
     };
 

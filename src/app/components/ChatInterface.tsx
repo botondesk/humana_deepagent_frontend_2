@@ -560,7 +560,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(({ assistant }) => {
             />
             <div className="flex justify-between gap-2 p-3">
               <div className="flex items-center gap-2">
-                {controls}
+
                 <Button
                   type="button"
                   variant="ghost"
