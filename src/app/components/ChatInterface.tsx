@@ -626,6 +626,9 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(({ assistant }) => {
               </div>
             </div>
           </form>
+          <div className="pb-3 text-center text-xs text-muted-foreground">
+            DeepAgent can make mistakes, so double-check it
+          </div>
         </div>
       </div>
     </div>
